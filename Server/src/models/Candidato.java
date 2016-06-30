@@ -1,4 +1,4 @@
-package br.com.redes.urnaeletronica.models;
+package models;
 
 public class Candidato {
 	private int codigo_votacao;

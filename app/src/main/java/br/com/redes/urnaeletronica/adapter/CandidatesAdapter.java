@@ -33,12 +33,12 @@ public class CandidatesAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        return mCandidates.get(position).getName();
+        return mCandidates.get(position).getNome_candidato();
     }
 
     @Override
     public long getItemId(int position) {
-        return mCandidates.get(position).getCod_vote();
+        return mCandidates.get(position).getCodigo_votacao();
     }
 
     @Override
@@ -60,7 +60,7 @@ public class CandidatesAdapter extends BaseAdapter {
     public List<String> getNames() {
         List<String> names = new ArrayList<>();
         for (Candidato candidato: mCandidates) {
-            names.add(candidato.getName());
+            names.add(candidato.getNome_candidato());
         }
         return names;
     }

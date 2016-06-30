@@ -1,38 +1,34 @@
 package br.com.redes.urnaeletronica.connection;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v4.content.LocalBroadcastManager;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.gson.Gson;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
-import java.net.UnknownHostException;
 
-import br.com.redes.urnaeletronica.activity.MainActivity;
+import br.com.redes.urnaeletronica.models.Vote;
 
 /**
  * Created by Matheus Mesquita on 29-Jun-16.
  */
-public class Client extends AsyncTask<Void, Void, Void> {
+public class SendCandidate extends AsyncTask<Void, Void, Void> {
 
-    private Socket mSocket;
-    String response;
     private Context mContext;
+    private Socket mSocket;
+    private Vote mVote;
 
-    public Client(Context context) {
+    public SendCandidate(Context context, Vote vote) {
         mContext = context;
+        mVote = vote;
     }
 
     @Override
@@ -42,15 +38,13 @@ public class Client extends AsyncTask<Void, Void, Void> {
             mSocket = new Socket();
             mSocket.connect(socketAddress, 5000);
 
-            BufferedReader in = new BufferedReader(new InputStreamReader(mSocket.getInputStream()));
-            response = in.readLine();
-            System.out.println(response);
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-            response = "UnknownHostException: " + e.toString();
+            Gson gson = new Gson();
+
+            OutputStreamWriter out = new OutputStreamWriter(mSocket.getOutputStream(), "UTF-8");
+            out.write(gson.toJson(mVote)+"\n");
+            out.flush();
         } catch (IOException e) {
             e.printStackTrace();
-            response = "IOException: " + e.toString();
         } finally {
             if (mSocket != null) {
                 try {
@@ -65,10 +59,7 @@ public class Client extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected void onPostExecute(Void result) {
-        Intent intent = new Intent("user-event");
-        intent.putExtra("json", response);
-        LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
         super.onPostExecute(result);
+        Toast.makeText(mContext, "Voto computado", Toast.LENGTH_LONG).show();
     }
-
 }

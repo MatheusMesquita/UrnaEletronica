@@ -4,85 +4,112 @@
  * Sergio Andrade de Souza        			8531588
  */
 
+import models.Candidato;
+import models.Vote;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
 
 import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+
+import com.google.gson.Gson;
 
 public class Server {
 	
+	private static List<Candidato> mCandidates;
+	private static List<Vote> mVotes;
+	
     public static void main(String[] args) throws IOException {
+    	String option;
     	
-        ServerSocket serverSocket = new ServerSocket();
-        serverSocket.bind(new InetSocketAddress("192.168.0.28", 40011));
-        System.out.println(serverSocket.getLocalSocketAddress());
-        
+    	generateCandidatesList();
+    	
+    	mVotes = new ArrayList<>();
+    	
+    	ServerSocket mServerSocket = new ServerSocket();
+        mServerSocket.bind(new InetSocketAddress("192.168.0.28", 40011));
+        System.out.println(mServerSocket.getLocalSocketAddress());
+    	
         try{
             while (true) {
-                Socket socket = serverSocket.accept();
-                startHandler(socket);
+            	Socket optionSocket = mServerSocket.accept();
+            	option = getOption(optionSocket);
+            	System.out.println(option);
+            	switch (option) {
+            		case("999"):
+            			Socket sendingSocket = mServerSocket.accept();
+                    	sendCandidates(sendingSocket);
+            			break;
+            		case("888"):
+            			Socket receiveSocket = mServerSocket.accept();
+            			receiveCandidate(receiveSocket);
+            			break;
+            	}
             }
         } finally {
-            serverSocket.close();
+            mServerSocket.close();
         }
         
     }
-    public void DatagramSocket(int port, InetAddress laddr) throws SocketException {
-    	//InetAddress localAddress = DatagramSocket.getLocalAddress();
-    }
     
-    private static void startHandler(final Socket socket) throws IOException {
+    private static void generateCandidatesList() {
+		mCandidates = new ArrayList<>();
+		
+		Candidato c1 = new Candidato();
+		c1.setCodigo_votacao(0);
+		c1.setNome_candidato("Goku");
+		c1.setPartido("DBZ");
+		c1.setNum_votos(0);
+		
+		Candidato c2 = new Candidato();
+		c2.setCodigo_votacao(1);
+		c2.setNome_candidato("Fofao");
+		c2.setPartido("Carreta Furacao");
+		c2.setNum_votos(0);
+		
+		Candidato c3 = new Candidato();
+		c3.setCodigo_votacao(2);
+		c3.setNome_candidato("Ban Ban");
+		c3.setPartido("13");
+		c3.setNum_votos(0);
+		
+		Candidato c4 = new Candidato();
+		c4.setCodigo_votacao(3);
+		c4.setNome_candidato("Tiririca");
+		c4.setPartido("PR");
+		c4.setNum_votos(0);
+		
+		mCandidates.add(c1);
+		mCandidates.add(c2);
+		mCandidates.add(c3);
+		mCandidates.add(c4);
+	}
+
+	private static void sendCandidates(final Socket socket) throws IOException {
         Thread thread = new Thread(){
             @Override
             public void run() {
                 try {
                     OutputStreamWriter writer = new OutputStreamWriter(socket.getOutputStream(), "UTF-8");
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
-                    System.out.println("Client connected");
+                    System.out.println("Server sent candidates list");
                     
-                    //String line = reader.readLine();
-                    JSONObject json1 = new JSONObject();
-                    json1.put("codigo_votacao", 0);
-                    json1.put("nome_candidato", "Dilma");
-                    json1.put("partido", "PT");
-                    json1.put("num_votos", 3);
-                    
-                    JSONObject json2 = new JSONObject();
-                    json2.put("codigo_votacao", 1);
-                    json2.put("nome_candidato", "Aecio");
-                    json2.put("partido", "PSDB");
-                    json2.put("num_votos", 2);
-                    
-                    JSONObject json3 = new JSONObject();
-                    json3.put("codigo_votacao", 2);
-                    json3.put("nome_candidato", "Marina");
-                    json3.put("partido", "PV");
-                    json3.put("num_votos", 1);
-                    
-                    JSONArray jsonArray = new JSONArray();
-                    jsonArray.put(json1);
-                    jsonArray.put(json2);
-                    jsonArray.put(json3);
-                    
+                    JSONArray jsonArray = new JSONArray(mCandidates);
                     System.out.println(jsonArray.toString() + "\n");
+                    
                     writer.write(jsonArray.toString() + "\n");
                     writer.flush();
-                    
                 } catch (IOException e){
                     e.printStackTrace();
-                } catch (JSONException ex) {
-                    Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
                 }finally{
                     closeSocket();
                 }
@@ -92,9 +119,60 @@ public class Server {
                 try {
                     socket.close();
                 } catch (IOException ex) {
+                	ex.printStackTrace();
                 }
-              }
-            };
+            }
+        };
         thread.start();
+    }
+    
+    private static void receiveCandidate(final Socket socket) throws IOException {
+    	FutureTask<Vote> thread = new FutureTask<Vote>( new Callable<Vote>() {
+			@Override
+			public Vote call() throws Exception {
+				BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
+                System.out.println("Client sent candidate");                   
+                System.out.println(reader.readLine());
+              
+                Gson gson = new Gson();
+        		Vote vote = gson.fromJson(reader.readLine(), Vote.class);
+                
+        		socket.close();
+        		
+                return vote;
+	        }
+    	});
+        thread.run();
+        
+        try {
+			mVotes.add(thread.get());
+		} catch (InterruptedException | ExecutionException e) {
+			e.printStackTrace();
+		}
+    }
+    
+    private static String getOption(final Socket socket) throws IOException {
+    	FutureTask<String> thread = new FutureTask<String>(new Callable<String>() {
+    		String option;
+    		BufferedReader mReader;
+			@Override
+			public String call() throws Exception {
+	            mReader = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
+	            System.out.println("Client requested option");
+	            option = mReader.readLine();
+	        
+	        	socket.close();		           
+		        
+				return option;
+			}
+		});
+    	thread.run();
+    	
+        try {
+			return thread.get();
+		} catch (InterruptedException | ExecutionException e) {
+			e.printStackTrace();
+		}
+		return null;
     }
 }

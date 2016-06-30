@@ -15,6 +15,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -28,9 +29,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.redes.urnaeletronica.R;
-import br.com.redes.urnaeletronica.adapter.CandidatesAdapter;
 import br.com.redes.urnaeletronica.connection.Client;
+import br.com.redes.urnaeletronica.connection.SendCandidate;
+import br.com.redes.urnaeletronica.connection.SendOption;
 import br.com.redes.urnaeletronica.models.Candidato;
+import br.com.redes.urnaeletronica.models.Vote;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private Context mContext;
 
     private List<Candidato> mCandidates;
+    private int mChoosenCandidate;
     private String mJsonArray;
 
     private MediaPlayer urnSound;
@@ -59,10 +63,10 @@ public class MainActivity extends AppCompatActivity {
                     JSONObject jsonObject = (JSONObject) jsonArray.get(i);
 
                     Candidato candidato = new Candidato();
-                    candidato.setCod_vote(jsonObject.getInt("codigo_votacao"));
-                    candidato.setName(jsonObject.getString("nome_candidato"));
-                    candidato.setParty(jsonObject.getString("partido"));
-                    candidato.setVotes(jsonObject.getInt("num_votos"));
+                    candidato.setCodigo_votacao(jsonObject.getInt("codigo_votacao"));
+                    candidato.setNome_candidato(jsonObject.getString("nome_candidato"));
+                    candidato.setPartido(jsonObject.getString("partido"));
+                    candidato.setNum_votos(jsonObject.getInt("num_votos"));
 
                     mCandidates.add(candidato);
                 }
@@ -70,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(mContext, android.R.layout.simple_spinner_item, getCandidateNames());
+            ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(mContext, android.R.layout.simple_spinner_item, getCandidatesNames());
             dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             mSpCandidates.setAdapter(dataAdapter);
         }
@@ -90,7 +94,14 @@ public class MainActivity extends AppCompatActivity {
 
         generateView();
 
+        sendOption("999");
+
         getCandidatesList();
+    }
+
+    private void sendOption(String option) {
+        SendOption op = new SendOption(option);
+        op.execute();
     }
 
     private void getCandidatesList() {
@@ -104,9 +115,22 @@ public class MainActivity extends AppCompatActivity {
         mBtnVoteWhite = (Button) findViewById(R.id.btnVoteWhite);
         mBtnVoteNull = (Button) findViewById(R.id.btnVoteNull);
 
+        mSpCandidates.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                mChoosenCandidate = position;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         mBtnVote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sendVote("normal");
                 playVoteSound();
             }
         });
@@ -114,6 +138,7 @@ public class MainActivity extends AppCompatActivity {
         mBtnVoteWhite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sendVote("white");
                 playVoteSound();
             }
         });
@@ -121,16 +146,35 @@ public class MainActivity extends AppCompatActivity {
         mBtnVoteNull.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sendVote("nullVote");
                 playVoteSound();
             }
         });
     }
 
+    private void sendVote(String voteType) {
+        sendOption("888");
+        Vote vote;
 
-    private List<String> getCandidateNames() {
+        switch (voteType){
+            case("normal"):
+                vote = new Vote(mCandidates.get(mChoosenCandidate), voteType);
+                break;
+            case("white"):
+                vote = new Vote(null, voteType);
+                break;
+            default:
+                vote = new Vote(null, voteType);
+                break;
+        }
+        SendCandidate sendCandidate = new SendCandidate(this, vote);
+        sendCandidate.execute();
+    }
+
+    private List<String> getCandidatesNames() {
         List<String> names = new ArrayList<>();
         for (Candidato candidato: mCandidates) {
-            names.add(candidato.getName());
+            names.add(candidato.getNome_candidato());
         }
         return names;
     }
