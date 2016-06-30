@@ -20,34 +20,46 @@
 
     <Spinner
         android:id="@+id/spCandidates"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/imgCandidate"/>
+        android:layout_below="@+id/imgCandidate"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"/>
 
-    <Button
-        android:id="@+id/btnVote"
-        android:layout_width="180dp"
+    <ScrollView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/spCandidates"
-        android:layout_centerHorizontal="true"
-        android:padding="25dp"
-        android:text="Votar" />
+        android:layout_below="@+id/spCandidates">
 
-    <Button
-        android:id="@+id/btnVoteWhite"
-        android:layout_width="180dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/btnVote"
-        android:layout_centerHorizontal="true"
-        android:padding="25dp"
-        android:text="Votar em branco" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <Button
-        android:id="@+id/btnVoteNull"
-        android:layout_width="180dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/btnVoteWhite"
-        android:layout_centerHorizontal="true"
-        android:padding="25dp"
-        android:text="Votar nulo" />
+            <Button
+                android:id="@+id/btnVote"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:padding="25dp"
+                android:text="Votar" />
+
+            <Button
+                android:id="@+id/btnVoteWhite"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/btnVote"
+                android:layout_centerHorizontal="true"
+                android:padding="25dp"
+                android:text="Votar em branco" />
+
+            <Button
+                android:id="@+id/btnVoteNull"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/btnVoteWhite"
+                android:layout_centerHorizontal="true"
+                android:padding="25dp"
+                android:text="Votar nulo" />
+        </RelativeLayout>
+    </ScrollView>
 </RelativeLayout>
