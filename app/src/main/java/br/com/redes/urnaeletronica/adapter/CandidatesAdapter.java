@@ -5,9 +5,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Spinner;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import br.com.redes.urnaeletronica.R;
 import br.com.redes.urnaeletronica.models.Candidato;
 
 /**
@@ -30,7 +33,7 @@ public class CandidatesAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        return mCandidates.get(position);
+        return mCandidates.get(position).getName();
     }
 
     @Override
@@ -40,6 +43,29 @@ public class CandidatesAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        return null;
+        Holder holder = new Holder();
+
+        if (convertView == null) {
+            convertView = mInflater.inflate(R.layout.activity_main, null);
+            holder.spNames = (Spinner) convertView.findViewById(R.id.spCandidates);
+
+        } else
+            holder = (Holder) convertView.getTag();
+
+        convertView.setTag(holder);
+
+        return convertView;
+    }
+
+    public List<String> getNames() {
+        List<String> names = new ArrayList<>();
+        for (Candidato candidato: mCandidates) {
+            names.add(candidato.getName());
+        }
+        return names;
+    }
+
+    public class Holder{
+        Spinner spNames;
     }
 }
