@@ -105,10 +105,10 @@ public class Server {
                     OutputStreamWriter writer = new OutputStreamWriter(socket.getOutputStream(), "UTF-8");
                     System.out.println("Server sent candidates list");
                     
-                    JSONArray jsonArray = new JSONArray(mCandidates);
-                    System.out.println(jsonArray.toString() + "\n");
+                    //JSONArray jsonArray = new JSONArray(mCandidates);
+                    //System.out.println(jsonArray.toString() + "\n");
                     
-                    writer.write(jsonArray.toString() + "\n");
+                    writer.write("OLA\n");
                     writer.flush();
                 } catch (IOException e){
                     e.printStackTrace();
