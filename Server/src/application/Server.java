@@ -12,6 +12,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -38,9 +39,9 @@ public class Server {
     	
     	mVotes = new ArrayList<>();
     	
-    	ServerSocket mServerSocket = new ServerSocket(40011);
+    	ServerSocket mServerSocket = new ServerSocket();
     	//192.168.0.28
-        //mServerSocket.bind(new InetSocketAddress("172.26.171.200", 40011));
+        mServerSocket.bind(new InetSocketAddress("192.168.0.100", 40011));
         System.out.println(mServerSocket.getLocalSocketAddress());
     	
         try{
@@ -109,7 +110,6 @@ public class Server {
                 try {
                     OutputStreamWriter writer = new OutputStreamWriter(socket.getOutputStream(), "UTF-8");
                     System.out.println("Server sent candidates list");
-                    
                     
                     //JSONArray jsonArray = new JSONArray(mCandidates);
                     System.out.println(element.toString() + "\n");
