@@ -37,7 +37,8 @@ public class Server {
     	mVotes = new ArrayList<>();
     	
     	ServerSocket mServerSocket = new ServerSocket();
-        mServerSocket.bind(new InetSocketAddress("192.168.0.28", 40011));
+    	//192.168.0.28
+        mServerSocket.bind(new InetSocketAddress("172.26.171.200", 40011));
         System.out.println(mServerSocket.getLocalSocketAddress());
     	
         try{
