@@ -1,3 +1,4 @@
+package application;
 /**
  * Diego Wilde Rodrigues 					7239200
  * Matheus Mesquita Nascimento dos Santos 	8531459	
@@ -36,9 +37,9 @@ public class Server {
     	
     	mVotes = new ArrayList<>();
     	
-    	ServerSocket mServerSocket = new ServerSocket();
+    	ServerSocket mServerSocket = new ServerSocket(40011);
     	//192.168.0.28
-        mServerSocket.bind(new InetSocketAddress("172.26.171.200", 40011));
+        //mServerSocket.bind(new InetSocketAddress("172.26.171.200", 40011));
         System.out.println(mServerSocket.getLocalSocketAddress());
     	
         try{
