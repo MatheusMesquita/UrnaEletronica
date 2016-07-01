@@ -96,6 +96,7 @@ public class Server {
 		mCandidates.add(c4);
 	}
 
+    
 	private static void sendCandidates(final Socket socket) throws IOException {
         Thread thread = new Thread(){
             @Override
