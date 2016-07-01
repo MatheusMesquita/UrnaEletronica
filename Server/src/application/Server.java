@@ -23,6 +23,8 @@ import java.util.concurrent.FutureTask;
 import org.json.JSONArray;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.reflect.TypeToken;
 
 public class Server {
 	
@@ -105,10 +107,14 @@ public class Server {
                     OutputStreamWriter writer = new OutputStreamWriter(socket.getOutputStream(), "UTF-8");
                     System.out.println("Server sent candidates list");
                     
-                    //JSONArray jsonArray = new JSONArray(mCandidates);
-                    //System.out.println(jsonArray.toString() + "\n");
+                    Gson gson = new Gson();
+                    JsonElement element = gson.toJsonTree(mCandidates, new TypeToken<List<Candidato>>() {}.getType());
+
                     
-                    writer.write("OLA\n");
+                    //JSONArray jsonArray = new JSONArray(mCandidates);
+                    System.out.println(element.toString() + "\n");
+                    
+                    writer.write(element.toString()+"\n");
                     writer.flush();
                 } catch (IOException e){
                     e.printStackTrace();
