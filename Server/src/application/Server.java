@@ -100,16 +100,18 @@ public class Server {
 
     
 	private static void sendCandidates(final Socket socket) throws IOException {
-        Thread thread = new Thread(){
+        
+		Gson gson = new Gson();
+        JsonElement element = gson.toJsonTree(mCandidates, new TypeToken<List<Candidato>>() {}.getType());
+
+        
+		Thread thread = new Thread(){
             @Override
             public void run() {
                 try {
                     OutputStreamWriter writer = new OutputStreamWriter(socket.getOutputStream(), "UTF-8");
                     System.out.println("Server sent candidates list");
                     
-                    Gson gson = new Gson();
-                    JsonElement element = gson.toJsonTree(mCandidates, new TypeToken<List<Candidato>>() {}.getType());
-
                     
                     //JSONArray jsonArray = new JSONArray(mCandidates);
                     System.out.println(element.toString() + "\n");
