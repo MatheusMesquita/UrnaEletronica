@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.redes.urnaeletronica.R;
-import br.com.redes.urnaeletronica.connection.Client;
+import br.com.redes.urnaeletronica.connection.ReceiveCandidates;
 import br.com.redes.urnaeletronica.connection.SendCandidate;
 import br.com.redes.urnaeletronica.connection.SendOption;
 import br.com.redes.urnaeletronica.models.Candidato;
@@ -105,8 +105,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getCandidatesList() {
-        Client client = new Client(mContext);
-        client.execute();
+        ReceiveCandidates receiveCandidates = new ReceiveCandidates(mContext);
+        receiveCandidates.execute();
     }
 
     private void generateView() {

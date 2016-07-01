@@ -25,20 +25,20 @@ import br.com.redes.urnaeletronica.activity.MainActivity;
 /**
  * Created by Matheus Mesquita on 29-Jun-16.
  */
-public class Client extends AsyncTask<Void, Void, Void> {
+public class ReceiveCandidates extends AsyncTask<Void, Void, Void> {
 
     private Socket mSocket;
     String response;
     private Context mContext;
 
-    public Client(Context context) {
+    public ReceiveCandidates(Context context) {
         mContext = context;
     }
 
     @Override
     protected Void doInBackground(Void... arg0) {
         try {
-            SocketAddress socketAddress = new InetSocketAddress(Utils.SV, Utils.PORT);
+            SocketAddress socketAddress = new InetSocketAddress(Utils.SVADDRESS, Utils.PORT);
             mSocket = new Socket();
             mSocket.connect(socketAddress, 5000);
 

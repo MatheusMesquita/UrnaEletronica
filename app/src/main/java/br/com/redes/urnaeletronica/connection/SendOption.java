@@ -23,7 +23,7 @@ public class SendOption extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... arg0) {
         try {
-            SocketAddress socketAddress = new InetSocketAddress(Utils.SV, Utils.PORT);
+            SocketAddress socketAddress = new InetSocketAddress(Utils.SVADDRESS, Utils.PORT);
             mSocket = new Socket();
             mSocket.connect(socketAddress, 5000);
 
