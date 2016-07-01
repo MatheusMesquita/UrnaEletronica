@@ -100,11 +100,9 @@ public class Server {
 
     
 	private static void sendCandidates(final Socket socket) throws IOException {
-        
 		Gson gson = new Gson();
-        JsonElement element = gson.toJsonTree(mCandidates, new TypeToken<List<Candidato>>() {}.getType());
-
-        
+        final JsonElement element = gson.toJsonTree(mCandidates, new TypeToken<List<Candidato>>() {}.getType());
+		
 		Thread thread = new Thread(){
             @Override
             public void run() {
