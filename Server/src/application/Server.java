@@ -12,7 +12,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -24,8 +23,8 @@ import java.util.concurrent.FutureTask;
 import org.json.JSONArray;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.reflect.TypeToken;
+//import com.google.gson.JsonElement;
+//import com.google.gson.reflect.TypeToken;
 
 public class Server {
 	
@@ -39,9 +38,9 @@ public class Server {
     	
     	mVotes = new ArrayList<>();
     	
-    	ServerSocket mServerSocket = new ServerSocket();
+    	ServerSocket mServerSocket = new ServerSocket(40011);
     	//192.168.0.28
-        mServerSocket.bind(new InetSocketAddress("192.168.0.100", 40011));
+        //mServerSocket.bind(new InetSocketAddress("192.168.0.100", 40011));
         System.out.println(mServerSocket.getLocalSocketAddress());
     	
         try{
@@ -101,8 +100,8 @@ public class Server {
 
     
 	private static void sendCandidates(final Socket socket) throws IOException {
-		Gson gson = new Gson();
-        final JsonElement element = gson.toJsonTree(mCandidates, new TypeToken<List<Candidato>>() {}.getType());
+		/*Gson gson = new Gson();
+        final JsonElement element = gson.toJsonTree(mCandidates, new TypeToken<List<Candidato>>() {}.getType());*/
 		
 		Thread thread = new Thread(){
             @Override
@@ -111,10 +110,10 @@ public class Server {
                     OutputStreamWriter writer = new OutputStreamWriter(socket.getOutputStream(), "UTF-8");
                     System.out.println("Server sent candidates list");
                     
-                    //JSONArray jsonArray = new JSONArray(mCandidates);
-                    System.out.println(element.toString() + "\n");
+                    JSONArray jsonArray = new JSONArray(mCandidates);
+                    System.out.println(jsonArray.toString() + "\n");
                     
-                    writer.write(element.toString()+"\n");
+                    writer.write(jsonArray.toString()+"\n");
                     writer.flush();
                 } catch (IOException e){
                     e.printStackTrace();
