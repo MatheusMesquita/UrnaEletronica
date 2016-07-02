@@ -150,10 +150,10 @@ public class Server {
                 System.out.println("Cliente enviou candidato escolhido");   
               
                 Gson gson = new Gson();
-        	Vote vote = gson.fromJson(reader.readLine(), Vote.class);
+                Vote vote = gson.fromJson(reader.readLine(), Vote.class);
                 mCandidates.get(vote.getCandidato().getCodigo_votacao()).somaVoto();
                
-        	socket.close();
+                socket.close();
         		
                 return vote;
             }
