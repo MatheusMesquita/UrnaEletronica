@@ -23,24 +23,28 @@ public class Candidato {
 	}
 
 	public void setNum_votos(int num_votos) {
-		this.num_votos = num_votos;
+            this.num_votos = num_votos;
 	}
 
 	public String getNome_candidato() {
-		return nome_candidato;
+            return nome_candidato;
 	}
 
 	public void setNome_candidato(String nome_candidato) {
-		this.nome_candidato = nome_candidato;
+            this.nome_candidato = nome_candidato;
 	}
 
 	public String getPartido() {
-		return partido;
+            return partido;
 	}
 
 	public void setPartido(String partido) {
-		this.partido = partido;
+            this.partido = partido;
 	}
+        
+        public void somaVoto(){
+            this.num_votos++;
+        }
 
     
     

@@ -16,3 +16,6 @@ local.properties
 
 # Keystore files
 *.jks
+/Server/nbproject/private/
+/Server/build/
+/Server/dist/
