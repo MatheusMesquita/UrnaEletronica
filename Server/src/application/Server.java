@@ -80,7 +80,7 @@ public class Server {
 		
 		Candidato c3 = new Candidato();
 		c3.setCodigo_votacao(2);
-		c3.setNome_candidato("Ban Ban");
+		c3.setNome_candidato("Bambam");
 		c3.setPartido("13");
 		c3.setNum_votos(0);
 		
@@ -108,7 +108,6 @@ public class Server {
                     OutputStreamWriter writer = new OutputStreamWriter(socket.getOutputStream(), "UTF-8");
                     System.out.println("Server sent candidates list");
                     
-                    //JSONArray jsonArray = new JSONArray(mCandidates);
                     System.out.println(element.toString() + "\n");
                     
                     writer.write(element.toString()+"\n");
