@@ -20,11 +20,9 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
-import org.json.JSONArray;
-
 import com.google.gson.Gson;
-//import com.google.gson.JsonElement;
-//import com.google.gson.reflect.TypeToken;
+import com.google.gson.JsonElement;
+import com.google.gson.reflect.TypeToken;
 
 public class Server {
 	
@@ -100,8 +98,8 @@ public class Server {
 
     
 	private static void sendCandidates(final Socket socket) throws IOException {
-		/*Gson gson = new Gson();
-        final JsonElement element = gson.toJsonTree(mCandidates, new TypeToken<List<Candidato>>() {}.getType());*/
+		Gson gson = new Gson();
+        final JsonElement element = gson.toJsonTree(mCandidates, new TypeToken<List<Candidato>>() {}.getType());
 		
 		Thread thread = new Thread(){
             @Override
@@ -110,10 +108,10 @@ public class Server {
                     OutputStreamWriter writer = new OutputStreamWriter(socket.getOutputStream(), "UTF-8");
                     System.out.println("Server sent candidates list");
                     
-                    JSONArray jsonArray = new JSONArray(mCandidates);
-                    System.out.println(jsonArray.toString() + "\n");
+                    //JSONArray jsonArray = new JSONArray(mCandidates);
+                    System.out.println(element.toString() + "\n");
                     
-                    writer.write(jsonArray.toString()+"\n");
+                    writer.write(element.toString()+"\n");
                     writer.flush();
                 } catch (IOException e){
                     e.printStackTrace();
