@@ -110,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void generateView() {
+        mImgCandidate = (ImageView) findViewById(R.id.imgCandidate);
         mSpCandidates = (Spinner) findViewById(R.id.spCandidates);
         mBtnVote = (Button) findViewById(R.id.btnVote);
         mBtnVoteWhite = (Button) findViewById(R.id.btnVoteWhite);
@@ -119,6 +120,21 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 mChoosenCandidate = position;
+
+                switch (position){
+                    case 0:
+                        mImgCandidate.setImageResource(R.drawable.goku);
+                        break;
+                    case 1:
+                        mImgCandidate.setImageResource(R.drawable.fofao);
+                        break;
+                    case 2:
+                        mImgCandidate.setImageResource(R.drawable.bambam);
+                        break;
+                    case 3:
+                        mImgCandidate.setImageResource(R.drawable.tiririca);
+                        break;
+                }
             }
 
             @Override
