@@ -161,6 +161,8 @@ public class Server {
         for(Candidato candidato: mCandidates){
             System.out.println(candidato.getNome_candidato()+": "+candidato.getNum_votos());
         }
+        System.out.println("Brancos: "+mWhite.getNum_votos());
+        System.out.println("Nulos: "+mNull.getNum_votos());
         System.out.println("Total de votos: "+mVotes.size());
         System.out.println("+----------------------------------------+\n\n");
     }
