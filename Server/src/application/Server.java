@@ -5,6 +5,7 @@ package application;
  * Sergio Andrade de Souza        			8531588
  */
 
+import models.Data;
 import models.Candidato;
 import models.Vote;
 
@@ -26,13 +27,18 @@ import com.google.gson.reflect.TypeToken;
 
 public class Server {
 	
+    private static Data mData;
     private static List<Candidato> mCandidates;
     private static List<Vote> mVotes;
+    private static Candidato mNull;
+    private static Candidato mWhite;
 	
     public static void main(String[] args) throws IOException {
     	String option; //999 ou 888
     	
-    	generateCandidatesList();
+    	mData = new Data(); 
+    	mCandidates = mData.getCandidates();
+    	generateCandidates();
     	
     	mVotes = new ArrayList<>();
     	
@@ -63,51 +69,20 @@ public class Server {
         
     }
     
-    private static void generateCandidatesList() {
-        mCandidates = new ArrayList<>();
-		
-        Candidato c1 = new Candidato();
-        c1.setCodigo_votacao(0);
-        c1.setNome_candidato("Goku");
-        c1.setPartido("DBZ");
-        c1.setNum_votos(0);
+    private static void generateCandidates() {
+		        
+        mWhite = new Candidato();
+        mWhite.setCodigo_votacao(4);
+        mWhite.setNome_candidato("Branco");
+        mWhite.setPartido("Branco");
+        mWhite.setNum_votos(0);
 
-        Candidato c2 = new Candidato();
-        c2.setCodigo_votacao(1);
-        c2.setNome_candidato("Fofao");
-        c2.setPartido("Carreta Furacao");
-        c2.setNum_votos(0);
+        mNull = new Candidato();
+        mNull.setCodigo_votacao(5);
+        mNull.setNome_candidato("Nulo");
+        mNull.setPartido("Nulo");
+        mNull.setNum_votos(0);
 
-        Candidato c3 = new Candidato();
-        c3.setCodigo_votacao(2);
-        c3.setNome_candidato("Ban Ban");
-        c3.setPartido("13");
-        c3.setNum_votos(0);
-
-        Candidato c4 = new Candidato();
-        c4.setCodigo_votacao(3);
-        c4.setNome_candidato("Tiririca");
-        c4.setPartido("PR");
-        c4.setNum_votos(0);
-
-        Candidato c5 = new Candidato();
-        c5.setCodigo_votacao(4);
-        c5.setNome_candidato("Branco");
-        c5.setPartido("Branco");
-        c5.setNum_votos(0);
-
-        Candidato c6 = new Candidato();
-        c5.setCodigo_votacao(6);
-        c5.setNome_candidato("Nulo");
-        c5.setPartido("Nulo");
-        c5.setNum_votos(0);
-
-        mCandidates.add(c1);
-        mCandidates.add(c2);
-        mCandidates.add(c3);
-        mCandidates.add(c4);
-        mCandidates.add(c5);
-        mCandidates.add(c6);
     }
 
     
@@ -151,8 +126,18 @@ public class Server {
               
                 Gson gson = new Gson();
                 Vote vote = gson.fromJson(reader.readLine(), Vote.class);
-                mCandidates.get(vote.getCandidato().getCodigo_votacao()).somaVoto();
-               
+                
+                switch(vote.getVoteType()){
+                	case "normal":
+                		mCandidates.get(vote.getCandidato().getCodigo_votacao()).somaVoto();
+                		break;
+                	case "white":
+                		mWhite.somaVoto();
+                		break;
+                	case "nullVote":
+                		mNull.somaVoto();
+                		break; 
+                }
                 socket.close();
         		
                 return vote;
@@ -171,13 +156,13 @@ public class Server {
     }
     
     private static void showTotalVotes(){
-        System.out.println("+----------------------------------------+\nLista de votos: \n\n");
+        System.out.println("\n\n+----------------------------------------+\nLista de votos: \n");
         
-        for(Vote vote: mVotes){
-            System.out.println(vote.getCandidato().getNome_candidato()+": "+vote.getCandidato().getNum_votos());
+        for(Candidato candidato: mCandidates){
+            System.out.println(candidato.getNome_candidato()+": "+candidato.getNum_votos());
         }
         System.out.println("Total de votos: "+mVotes.size());
-        System.out.println("+----------------------------------------+\n");
+        System.out.println("+----------------------------------------+\n\n");
     }
     
     private static String getOption(final Socket socket) throws IOException {
@@ -188,7 +173,7 @@ public class Server {
                 @Override
                 public String call() throws Exception {
                     mReader = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
-                    System.out.println("Cliente enviou opção");
+                    System.out.println("Cliente enviou op�ao");
                     option = mReader.readLine();
 
                     socket.close();		           
