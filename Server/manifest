@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Main-Class: application.Server
+
+Name: application/
+Sealed: true
+
+Name: models/
+Sealed: true
+
